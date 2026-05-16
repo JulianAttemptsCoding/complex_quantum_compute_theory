@@ -49,3 +49,8 @@ Thumbs.db
 # Local
 .envrc
 .env
+
+# Caveman skill/plugin install (lives alongside repo, not tracked)
+.agents/
+.claude/
+skills-lock.json
