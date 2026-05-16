@@ -312,7 +312,19 @@ Let $|\psi\rangle = \sqrt{1-\lambda}\,|\psi_{+}\rangle + \sqrt{\lambda}\,|\psi_{
 \begin{proof}
 \emph{Upper bound.} Take $\sigma = |\psi_{+}\rangle\langle\psi_{+}| \in \FAB$. The trace distance between two pure states equals $\sqrt{1 - |\langle\psi|\psi_{+}\rangle|^{2}} = \sqrt{1 - (1-\lambda)} = \sqrt{\lambda}$.
 
-\emph{Lower bound.} Let $\sigma \in \FAB$. Consider the Hermitian operator $Y = -|\psi_{+}\rangle\langle\psi_{+}| + |\psi_{-}\rangle\langle\psi_{-}|$. Then $\|Y\|_{\infty} = 1$, so $\tfrac{1}{2}\big\| |\psi\rangle\langle\psi| - \sigma \big\|_{1} \ge \tfrac{1}{2} \Tr\bigl(Y (|\psi\rangle\langle\psi| - \sigma)\bigr)$. Compute $\Tr(Y |\psi\rangle\langle\psi|) = -(1 - \lambda) + \lambda = 2\lambda - 1$. Since $\sigma \in \FAB$ is supported in $\Hplus$, $\Tr(Y \sigma) = -\langle \psi_{+} | \sigma | \psi_{+} \rangle \in [-1, 0]$. Hence $\tfrac{1}{2}\big\| |\psi\rangle\langle\psi| - \sigma \big\|_{1} \ge \tfrac{1}{2}(2\lambda - 1) - \tfrac{1}{2}\Tr(Y\sigma) \ge \tfrac{1}{2}(2\lambda - 1) + 0 = \lambda - \tfrac{1}{2}$. This Hermitian-witness bound is loose; a tighter contraction $\tilde Y$ on the two-dimensional subspace $\operatorname{span}\{\psi_{+}, \psi_{-}\}$ with eigenvalues $\pm 1$ and operator norm $1$ on the full space, chosen to have expectation $\sqrt{\lambda}$ on $|\psi\rangle$ and at most $-\sqrt{\lambda}$ on every state of $\FAB$, then matches the upper bound; explicitly, the optimization reduces to maximizing $\Tr(\tilde Y |\psi\rangle\langle\psi|)$ over Hermitian $\tilde Y$ with $\|\tilde Y\|_{\infty} \le 1$ and $\tilde Y \le 0$ on $\Hplus$, whose value is $\sqrt{\lambda}$ by the standard variational characterization of the trace distance to a face.
+\emph{Lower bound.} Let $\sigma \in \FAB$. Decompose $\sigma$ along the rank-one projector $|\psi_{+}\rangle\langle\psi_{+}|$ and its orthogonal complement \emph{inside $\Hplus$}: write $\sigma = \alpha |\psi_{+}\rangle\langle\psi_{+}| + (1-\alpha)\,\tau$ with $\alpha \in [0, 1]$ and $\tau$ a density operator supported in $\Hplus \ominus \operatorname{span}\{\psi_{+}\}$. The supports of $|\psi\rangle\langle\psi| - \alpha |\psi_{+}\rangle\langle\psi_{+}|$ (lives in $\operatorname{span}\{\psi_{+}, \psi_{-}\}$) and $(1-\alpha)\tau$ (orthogonal to that span) are mutually orthogonal, so
+\begin{equation*}
+  \big\| |\psi\rangle\langle\psi| - \sigma \big\|_{1} \;=\; \big\| |\psi\rangle\langle\psi| - \alpha |\psi_{+}\rangle\langle\psi_{+}| \big\|_{1} \,+\, (1-\alpha).
+\end{equation*}
+In the basis $\{\psi_{+}, \psi_{-}\}$,
+\begin{equation*}
+  |\psi\rangle\langle\psi| - \alpha |\psi_{+}\rangle\langle\psi_{+}| = \begin{pmatrix} 1 - \lambda - \alpha & \sqrt{\lambda(1-\lambda)} \\ \sqrt{\lambda(1-\lambda)} & \lambda \end{pmatrix},
+\end{equation*}
+with trace $1-\alpha$ and determinant $-\alpha \lambda$. Its eigenvalues are $\tfrac{1-\alpha}{2} \pm \tfrac{1}{2}\sqrt{(1-\alpha)^{2} + 4\alpha\lambda}$, so its trace norm equals $\sqrt{(1-\alpha)^{2} + 4\alpha\lambda}$. Therefore
+\begin{equation*}
+  \tfrac{1}{2}\big\| |\psi\rangle\langle\psi| - \sigma \big\|_{1} \;=\; \tfrac{1}{2}\!\left[\sqrt{(1-\alpha)^{2} + 4\alpha\lambda} + (1-\alpha)\right] \;=:\; f(\alpha).
+\end{equation*}
+A direct check ($f'(\alpha) = 0$ only at $\lambda \in \{0,1\}$, and $f(0)=1$ while $f(1)=\sqrt{\lambda}$) shows $f$ is strictly decreasing on $[0,1]$ for every $\lambda \in (0,1)$, hence is minimized at $\alpha = 1$ with value $\sqrt{\lambda}$. Combined with the upper bound this gives equality.
 \end{proof}
 
 \subsection{Alignment weight}
