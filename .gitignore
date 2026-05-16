@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.run.xml
+*.bcf
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.brf
+*.idx
+*.ilg
+*.ind
+*.thm
+
+# Build artifacts
+build/
+dist/
+*.pdf
+!figures/*.pdf
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local
+.envrc
+.env
