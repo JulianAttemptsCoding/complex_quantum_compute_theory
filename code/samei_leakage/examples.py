@@ -18,6 +18,7 @@ __all__ = [
     "bob_node_leakage_product",
     "imaginarity_inequivalence_A",
     "imaginarity_inequivalence_B",
+    "embed_complex_vector_to_H_plus",
     "haar_real_state",
     "random_real_density",
 ]
@@ -106,37 +107,88 @@ def imaginarity_inequivalence_A() -> tuple[np.ndarray, np.ndarray]:
     return rho, M
 
 
-def imaginarity_inequivalence_B() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Example B (Section 8): a bipartite state whose *complex* representation
-    has nonzero entrywise imaginarity (nonzero sigma_y component) but whose
-    realification sits entirely in H_+, so L = 0.
+def embed_complex_vector_to_H_plus(
+    psi_C: np.ndarray,
+    d_A: int,
+    d_B: int,
+) -> np.ndarray:
+    """Canonical same-i embedding iota: (H_A ⊗_C H_B)_R → H_+ ⊂ K_AB.
 
-    Take rho_C = (1/2)(I + sigma_y) on a single complex qubit (a pure state of
-    sigma_y eigenvalue +1; its 2x2 matrix has a -i/2 entry at position [0,1]).
-    Then rho_AB^C = rho_C x rho_C is a complex 2-qubit pure state with nonzero
-    imaginary entries in the computational basis.
+    With canonical local complex structures J_A = canonical_J(d_A),
+    J_B = canonical_J(d_B), the embedding is
 
-    Realifying *each factor* with the canonical J = canonical_J(1) and taking
-    the real tensor product of the two realified single-qubit states gives a
-    rho_real on K_AB (real dim 4 x 4 = 16). On the same-i sector decomposition
-    (M = J_A x J_B with the *bipartite* J_A, J_B acting on each realified
-    qubit) we get L = 0.
+        iota(|j>_C ⊗_C |k>_C) = (1/√2)(r_j ⊗ r_k - (J_A r_j) ⊗ (J_B r_k)),
+        iota(i |j>_C ⊗_C |k>_C) = (1/√2)((J_A r_j) ⊗ r_k + r_j ⊗ (J_B r_k)),
 
-    Returns (rho_real, M, rho_complex) for inspection.
+    where r_j is the j-th canonical real basis vector of H_{A,R} = R^{2 d_A}
+    (j = 0, ..., d_A - 1, representing |j>_C in the complex basis), and
+    J_A r_j = e_{d_A + j} for the canonical J_A.
+
+    Verified properties:
+      - iota is a real-linear isometry onto H_+.
+      - Pulled-back J_AB = A_op acts as multiplication by i in the complex basis.
+
+    Parameters
+    ----------
+    psi_C : complex array of length d_A * d_B
+        Complex amplitudes c_{jk} indexed by j * d_B + k.
+    d_A, d_B : int
+        Complex dimensions of the two factors.
+
+    Returns
+    -------
+    psi_R : real array of length 4 * d_A * d_B
+        Image in K_AB, supported in H_+.
     """
-    sigma_y_complex = np.array([[0.0, -1.0j], [1.0j, 0.0]])
-    I_complex = np.eye(2)
-    rho_complex_single = 0.5 * (I_complex + sigma_y_complex)
-    # realify the single-system complex state
-    rho_real_single = realify_state(rho_complex_single)  # 4x4 real
-    # take real tensor product of the two systems
-    rho_real = np.kron(rho_real_single, rho_real_single)  # 16x16
-    # The local complex structure on each realified factor is canonical_J(2)
-    JA = canonical_J(2)
-    JB = canonical_J(2)
+    psi_C = np.asarray(psi_C).reshape(-1)
+    if psi_C.size != d_A * d_B:
+        raise ValueError("psi_C must have length d_A * d_B")
+    nA = 2 * d_A
+    nB = 2 * d_B
+    psi_R = np.zeros(nA * nB)
+    inv_sqrt2 = 1.0 / np.sqrt(2.0)
+    for j in range(d_A):
+        for k in range(d_B):
+            c = complex(psi_C[j * d_B + k])
+            a, b = c.real, c.imag
+            r_j = np.zeros(nA); r_j[j] = 1.0
+            Jr_j = np.zeros(nA); Jr_j[d_A + j] = 1.0
+            r_k = np.zeros(nB); r_k[k] = 1.0
+            Jr_k = np.zeros(nB); Jr_k[d_B + k] = 1.0
+            real_part = np.kron(r_j, r_k) - np.kron(Jr_j, Jr_k)
+            imag_part = np.kron(Jr_j, r_k) + np.kron(r_j, Jr_k)
+            psi_R += inv_sqrt2 * (a * real_part + b * imag_part)
+    return psi_R
+
+
+def imaginarity_inequivalence_B() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Example B (Section 8): a bipartite *complex* state with nonzero entrywise
+    imaginarity whose realification under the canonical same-i embedding lies
+    entirely in H_+, so L = 0.
+
+    Construction. Take the complex pure state
+        |psi>_C = (|00> + i |11>) / sqrt(2)
+    on C^2 ⊗_C C^2. Its density matrix rho_C has off-diagonal entries
+        rho_C[0, 3] = -i/2,   rho_C[3, 0] = +i/2
+    in the computational basis (clearly nonzero imaginary entries).
+
+    Embed |psi>_C via the canonical isometry iota into H_+ ⊂ K_AB (real dim 16).
+    The resulting real pure state has L = 0 by construction.
+
+    Returns (rho_real, M, rho_complex).
+    """
+    d_A, d_B = 2, 2
+    # Complex bipartite state vector with imaginary components.
+    psi_C = np.zeros(d_A * d_B, dtype=complex)
+    psi_C[0] = 1.0 / np.sqrt(2.0)            # |00>
+    psi_C[d_A * d_B - 1] = 1.0j / np.sqrt(2.0)  # i |11>
+    rho_complex = np.outer(psi_C, psi_C.conj())
+    # Canonical embedding into H_+.
+    psi_R = embed_complex_vector_to_H_plus(psi_C, d_A, d_B)
+    rho_real = np.outer(psi_R, psi_R)
+    JA = canonical_J(d_A)
+    JB = canonical_J(d_B)
     _, _, M = sector_operators(JA, JB)
-    # Full complex state for reference
-    rho_complex = np.kron(rho_complex_single, rho_complex_single)
     return rho_real, M, rho_complex
 
 

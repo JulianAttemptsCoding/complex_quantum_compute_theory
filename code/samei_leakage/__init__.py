@@ -55,6 +55,7 @@ from .examples import (
     bob_node_leakage_product,
     imaginarity_inequivalence_A,
     imaginarity_inequivalence_B,
+    embed_complex_vector_to_H_plus,
     haar_real_state,
     random_real_density,
 )
@@ -90,6 +91,7 @@ __all__ = [
     "bob_node_leakage_product",
     "imaginarity_inequivalence_A",
     "imaginarity_inequivalence_B",
+    "embed_complex_vector_to_H_plus",
     "haar_real_state",
     "random_real_density",
 ]
