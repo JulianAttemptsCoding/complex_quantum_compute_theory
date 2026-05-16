@@ -37,6 +37,7 @@ build/
 dist/
 *.pdf
 !figures/*.pdf
+!paper/main.pdf
 
 # Editor / OS
 .DS_Store
