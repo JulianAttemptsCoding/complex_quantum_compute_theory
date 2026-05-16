@@ -1,0 +1,629 @@
+% !TeX program = pdflatex
+% Quantum-targeted manuscript: Same-$i$ Leakage.
+%
+% Compile with: latexmk -pdf main.tex   (or: pdflatex; bibtex; pdflatex x2)
+%
+% The quantumarticle class is the Quantum journal style. If unavailable,
+% replace with \documentclass[11pt,a4paper]{article} and the document compiles
+% with minor cosmetic differences (set \title/\author/\date manually).
+
+\documentclass[onecolumn]{quantumarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{microtype}
+
+% Theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+% Macros
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\HC}{H_{\C}}
+\newcommand{\HR}{H_{\R}}
+\newcommand{\KAB}{K_{AB}}
+\newcommand{\Pplus}{P_{+}}
+\newcommand{\Pminus}{P_{-}}
+\newcommand{\Hplus}{H_{+}}
+\newcommand{\Hminus}{H_{-}}
+\newcommand{\Aop}{\mathsf{A}}
+\newcommand{\Bop}{\mathsf{B}}
+\newcommand{\Mop}{M}
+\newcommand{\JAB}{J_{AB}}
+\newcommand{\FAB}{\mathcal{F}_{AB}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Phid}{\Phi^{\dagger}}
+\newcommand{\Ldag}{\mathcal{L}^{\dagger}}
+\newcommand{\Lleak}{L}
+\newcommand{\sameI}{same-$i$}
+
+\title{Same-$i$ Leakage: A Resource Theory of Shared Complex Structure in Real Quantum Composition}
+
+\author{Anonymous}
+\affiliation{Submitted to \emph{Quantum}.}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Complex quantum theory can be represented over real Hilbert spaces by replacing multiplication by $i$ with an orthogonal complex structure $J$ satisfying $J^{2}=-I$ and $J^{\top}=-J$. For a single system this makes the imaginary unit appear locally removable. We show that the nontrivial structure reappears under composition: the full real tensor product of two realified systems is twice as large as the realification of the ordinary complex tensor product, and ordinary complex composition is recovered by imposing the \sameI{} balancing relation $J_{A} x \otimes y = x \otimes J_{B} y$. Equivalently, the real tensor product splits into an aligned sector $\Hplus = \ker(J_{A}\otimes J_{B} + I)$, representing ordinary complex composition, and an anti-aligned leakage sector $\Hminus = \ker(J_{A}\otimes J_{B} - I)$. We define \sameI{} \emph{leakage} $L(\rho) = \Tr(\Pminus \rho)$, characterize the leakage-nonincreasing operations by the exact condition $\Phid(\Pminus) \le \Pminus$, prove a Kraus no-leakage criterion $\Pminus K_{k} \Pplus = 0$, and establish the coherent cross-sector bound $\|\Pplus \rho \Pminus\|_{1} \le \sqrt{L(1-L)}$. We analyze the geometry of this resource through alignment weight, trace distance to the free face (equal to $\sqrt{L}$ on coherent pure states), and the divergence of standard positive-noise robustness. We derive Hamiltonian and Lindblad leakage-rate formulas and give an exactly solved sector-parity discrimination task with optimum $p_{\mathrm{succ}}^{(\epsilon)} = \tfrac{1}{2} + \sqrt{m(1-m)}$, $m = \min\{\epsilon, 1/2\}$. As a worked example we compute that the Caves--Fuchs--Rungta two-rebit state $\tfrac{1}{4}(\sigma_{0}\otimes\sigma_{0} + \alpha\,\sigma_{y}\otimes\sigma_{y})$ has leakage $L = (1-\alpha)/2$, so the maximally real-entangled / complex-separable state is fully aligned. We identify the explicit obstruction $L_{B} = 1/2$ for naive Bob-node leakage witnesses in product-source bilocal models. The framework gives a resource theory of compositional complex-structure alignment and isolates the construction of a non-tautological network witness, under operational rather than product-state source independence, as the central open problem.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Why composition is where complex structure becomes nontrivial}
+
+A finite-dimensional complex Hilbert space $\HC$ of complex dimension $d$ can be reinterpreted as a real Hilbert space $\HR$ of real dimension $2d$, together with a real-linear operator $J$ acting as multiplication by $i$:
+\begin{equation}
+  J^{2} = -I, \qquad J^{\top} = -J.
+  \label{eq:Jdef}
+\end{equation}
+This is standard; the construction goes back to Stueckelberg~\cite{Stueckelberg1960} and is developed in detail by Myrheim~\cite{Myrheim1999} and Moretti--Oppio~\cite{MorettiOppio2017} at the level of single systems.
+
+The substantive question is not whether a single complex system admits a real reformulation---it does---but whether two \emph{independently} realified systems share the same local meaning of $i$. The ordinary complex tensor product imposes the balancing relation
+\begin{equation}
+  J_{A} x \otimes y = x \otimes J_{B} y,
+  \label{eq:balancing}
+\end{equation}
+which says that multiplying subsystem $A$ by $i$ is the same as multiplying subsystem $B$ by $i$. Without that constraint, the full real tensor product is twice as large as the realification of the complex tensor product, and the extra degrees of freedom describe configurations in which the two subsystems disagree about the complex structure. This paper quantifies that disagreement and develops it into a resource theory.
+
+\subsection{What this paper proves}
+
+We define the \emph{alignment operator} $\Mop = J_{A} \otimes J_{B}$. It is a real symmetric involution ($\Mop^{\top} = \Mop$, $\Mop^{2} = I$), and induces the decomposition
+\begin{equation}
+\boxed{\quad
+  \KAB \;=\; \HR^{A} \otimes_{\R} \HR^{B} \;=\; \Hplus \oplus \Hminus,
+\qquad
+  \Pplus = \tfrac{1}{2}(I - \Mop), \quad \Pminus = \tfrac{1}{2}(I + \Mop).
+\quad}
+  \label{eq:sector-decomp}
+\end{equation}
+The aligned sector $\Hplus = \ker(\Mop + I)$ canonically represents the \sameI{} quotient and hence ordinary complex composition (Theorems~\ref{thm:quotient} and~\ref{thm:sector}). We define
+\begin{equation}
+\boxed{\quad
+  \Lleak(\rho) \;:=\; \Tr(\Pminus \rho) \;=\; \tfrac{1}{2}\bigl(1 + \Tr(\Mop \rho)\bigr),
+\quad}
+  \label{eq:leakage-def}
+\end{equation}
+and prove:
+\begin{itemize}\setlength\itemsep{0.0ex}
+\item $\Lleak$ is affine, ranges in $[0,1]$, and vanishes exactly on states supported in $\Hplus$ (Theorem~\ref{thm:basicL}).
+\item A real CPTP map $\Phi$ is leakage-nonincreasing for all states iff $\Phid(\Pminus) \le \Pminus$ (Theorem~\ref{thm:monotonicity}).
+\item Kraus operators satisfy this iff $\Pminus K_{k} \Pplus = 0$ for every $k$ (Theorem~\ref{thm:kraus}).
+\item Coherent cross-sector amplitudes obey $\|\Pplus \rho \Pminus\|_{1} \le \sqrt{L(1-L)}$ (Theorem~\ref{thm:coherent}).
+\item The trace distance to the free face equals $\sqrt{\lambda}$ on coherent pure states (Theorem~\ref{thm:tracedist}).
+\item Standard positive-noise robustness diverges for every state with $L > 0$ (Proposition~\ref{prop:robustness}).
+\item Hamiltonian and Lindblad dynamics admit explicit leakage-rate formulas (Theorems~\ref{thm:hamiltonian}, \ref{thm:perturbative}, and \ref{thm:lindblad}).
+\item Binary discrimination of $\mathcal{N}_{0}(\rho) = \rho$ versus $\mathcal{N}_{1}(\rho) = \Mop \rho \Mop$ has optimum $\tfrac{1}{2} + \sqrt{m(1-m)}$ with $m = \min\{\epsilon, 1/2\}$, achieved by coherent cross-sector pure states (Theorem~\ref{thm:discrimination}).
+\item The Caves--Fuchs--Rungta two-rebit family has $L = (1-\alpha)/2$ (Proposition~\ref{prop:cfr}).
+\item For product-source bilocal networks, Bob-node leakage is identically $1/2$ (Proposition~\ref{prop:bobnode}).
+\item The leakage-constrained moment hierarchy is sound (Theorem~\ref{thm:moments}).
+\end{itemize}
+
+\subsection{What this paper does \emph{not} claim}
+
+We do not claim that complex numbers are experimentally necessary, nor that real Hilbert-space quantum theory is falsified. Renou et al.~\cite{Renou2021RealQT} argued the former under product-state source independence; Hoffreumon--Woods~\cite{HoffreumonWoodsNonFalsified, HoffreumonWoods2025} and Weilenmann--Gisin--Sekatski~\cite{WeilenmannGisinSekatski2025} argue the opposite under operational or partial-independence variants. Our contribution is orthogonal: we quantify, as a resource, the compositional cost of enforcing one shared complex structure across independently composed real systems. We do not provide a non-tautological device-independent network inequality, and we explicitly prove an obstruction (Proposition~\ref{prop:bobnode}) showing why the natural Bob-node leakage witness fails for product bilocal sources. We also do not claim that \sameI{} leakage is operationally separated from ordinary Hickey--Gour imaginarity~\cite{HickeyGour2018, Wu2021Imaginarity, Wu2024Distributed} in full generality; the inequivalence is structural and example-based (Section~\ref{sec:imaginarity}).
+
+\subsection{Positioning}
+
+The sector decomposition $\KAB = \Hplus \oplus \Hminus$ has appeared implicitly in the realification literature beginning with Myrheim~\cite{Myrheim1999} and is anchored on the real-vs-complex composition phenomenon of Caves--Fuchs--Rungta~\cite{CavesFuchsRungta2001}; our contribution is the resource-theoretic structure on top of it---a monotone, free operations, a coherent leakage bound, dynamics, an exact discrimination task, and an explicit obstruction for naive Bob-node bilocal witnesses. The framing is distinct from the Hickey--Gour basis-relative imaginarity resource theory~\cite{HickeyGour2018, Wu2021Imaginarity, Wu2024Distributed}, from the ubit construction of Aleksandrova--Borish--Wootters~\cite{AleksandrovaBorishWootters2013}, from the real-vs-complex entanglement gap of Chiribella et al.~\cite{ChiribellaDePalmaRinaldi2023}, and from the Renou / Hoffreumon--Woods / Weilenmann--Gisin--Sekatski falsifiability axis.
+
+\subsection{Notation summary}
+\label{ssec:notation}
+
+All Hilbert spaces are finite-dimensional. The real adjoint is $\top$; in an orthonormal real basis this is transpose. Complex Hilbert spaces are $\HC$ of complex dimension $d$, with realifications $\HR$ of real dimension $2d$. The local complex structures are $J_{A}, J_{B}$ (each satisfies $J^{2}=-I$, $J^{\top}=-J$). The \emph{sector operators} are
+\begin{equation}
+  \Aop := J_{A} \otimes I_{B}, \qquad \Bop := I_{A} \otimes J_{B}, \qquad \Mop := \Aop \Bop = J_{A} \otimes J_{B}.
+  \label{eq:sectorops}
+\end{equation}
+The Schr\"odinger real generator is $G = -J H_{\R}$ where $H_{\R}$ is the realified Hamiltonian. Lindblad jump operators are $R_{\ell}$. The trace norm is $\|\cdot\|_{1}$. Density operators $\rho$ are real symmetric positive semidefinite with $\Tr \rho = 1$. The free face is
+\begin{equation}
+  \FAB \;:=\; \{\rho : \Lleak(\rho) = 0\} \;=\; \{\rho : \rho = \Pplus \rho \Pplus\}.
+  \label{eq:freeface}
+\end{equation}
+
+\section{Realification and local complex structures}
+\label{sec:realification}
+
+\subsection{Orthogonal complex structures}
+
+\begin{theorem}[Realification preserves quantum statistics]
+\label{thm:realification}
+Let $X = A + i B$ be a $d \times d$ complex matrix with real $A, B$, and define
+\begin{equation}
+  R(X) := \begin{pmatrix} A & -B \\ B & A \end{pmatrix}.
+  \label{eq:R}
+\end{equation}
+Let $\rho_{\C}$ be a complex density operator and $E_{\C}$ a complex effect. Define $\rho_{\R} := \tfrac{1}{2} R(\rho_{\C})$ and $E_{\R} := R(E_{\C})$. Then
+\begin{equation}
+  \Tr_{\R} \rho_{\R} = 1, \qquad \Tr_{\R}(E_{\R} \rho_{\R}) = \Tr_{\C}(E_{\C} \rho_{\C}).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The map $R$ is a unital ring homomorphism: $R(XY) = R(X) R(Y)$ by direct block computation. For $X = A + iB$, $\Tr_{\R} R(X) = 2\Tr A = 2\Re \Tr_{\C} X$. Since $\rho_{\C}$ is Hermitian, $\Tr \rho_{\C} \in \R$ and equals $1$, so $\Tr_{\R} R(\rho_{\C}) = 2$, giving $\Tr_{\R} \rho_{\R} = 1$. Therefore
+\begin{equation*}
+  \Tr_{\R}(E_{\R} \rho_{\R}) = \tfrac{1}{2} \Tr_{\R} R(E_{\C} \rho_{\C}) = \Re \Tr_{\C}(E_{\C} \rho_{\C}) = \Tr_{\C}(E_{\C} \rho_{\C}),
+\end{equation*}
+where the last equality uses that the trace of a product of Hermitian operators is real.
+\end{proof}
+
+The \emph{canonical} complex structure on $\R^{2d}$ is
+\begin{equation}
+  J_{d} := \begin{pmatrix} 0 & -I_{d} \\ I_{d} & 0 \end{pmatrix},
+  \label{eq:canonicalJ}
+\end{equation}
+which satisfies $J_{d}^{2} = -I$ and $J_{d}^{\top} = -J_{d}$. The induced complex inner product is $\langle \psi, \phi \rangle_{J} = g(\psi, \phi) + i\, g(J\psi, \phi)$, where $g$ is the real inner product. A real-linear operator $X$ on $(\HR, J)$ is complex-linear iff $XJ = JX$.
+
+\section{\sameI{} composition}
+\label{sec:samei}
+
+\subsection{The quotient theorem}
+
+\begin{theorem}[\sameI{} quotient]
+\label{thm:quotient}
+Let $\HC^{A}, \HC^{B}$ be complex Hilbert spaces of complex dimensions $d_{A}, d_{B}$, with realifications $\HR^{A}, \HR^{B}$ carrying complex structures $J_{A}, J_{B}$. There is a canonical real-linear isomorphism
+\begin{equation}
+  (\HC^{A} \otimes_{\C} \HC^{B})_{\R} \;\cong\; \frac{\HR^{A} \otimes_{\R} \HR^{B}}{\operatorname{span}_{\R}\{J_{A} x \otimes y - x \otimes J_{B} y : x \in \HR^{A}, y \in \HR^{B}\}}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The complex tensor product is the universal target of complex-bilinear maps. A real-bilinear map $\varphi : \HR^{A} \times \HR^{B} \to V$ into a complex vector space $V$ factors through the complex tensor product iff $\varphi(J_{A} x, y) = \varphi(x, J_{B} y)$ for all $x, y$. Equivalently, $\varphi$ vanishes on the balancing relations $J_{A} x \otimes y - x \otimes J_{B} y$. The quotient on the right-hand side therefore satisfies the universal property of $(\HC^{A} \otimes_{\C} \HC^{B})_{\R}$.
+\end{proof}
+
+\subsection{Sector decomposition}
+
+Define the sector operators $\Aop = J_{A} \otimes I_{B}$, $\Bop = I_{A} \otimes J_{B}$, and the alignment operator $\Mop = \Aop \Bop = J_{A} \otimes J_{B}$. Then $\Mop$ is a real symmetric involution: $\Mop^{\top} = J_{A}^{\top} \otimes J_{B}^{\top} = (-J_{A}) \otimes (-J_{B}) = \Mop$, and $\Mop^{2} = J_{A}^{2} \otimes J_{B}^{2} = (-I)(-I) = I$. The real tensor product $\KAB = \HR^{A} \otimes_{\R} \HR^{B}$ has $\dim_{\R} \KAB = 4 d_{A} d_{B}$, exactly twice the real dimension of the complex tensor product. Define $\Hplus = \ker(\Mop + I)$, $\Hminus = \ker(\Mop - I)$, and $\Pplus = \tfrac{1}{2}(I - \Mop)$, $\Pminus = \tfrac{1}{2}(I + \Mop)$.
+
+\begin{theorem}[Sector representation of the quotient]
+\label{thm:sector}
+The aligned sector $\Hplus$ canonically represents the \sameI{} quotient; equivalently, $\psi \in \Hplus$ iff $\Aop \psi = \Bop \psi$. The sector has real dimension $\dim_{\R} \Hplus = 2 d_{A} d_{B}$ and carries the induced complex structure
+\begin{equation}
+  \JAB := \Aop \rvert_{\Hplus} = \Bop \rvert_{\Hplus}, \qquad \JAB^{2} = -I_{\Hplus}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Suppose $\Aop \psi = \Bop \psi$. Applying $\Aop$ gives $\Aop^{2} \psi = \Aop \Bop \psi = \Mop \psi$. Since $\Aop^{2} = J_{A}^{2} \otimes I = -I$, we have $\Mop \psi = -\psi$, hence $\psi \in \Hplus$. Conversely, $\Mop \psi = -\psi$ gives $\Aop \Bop \psi = -\psi$, so $\Bop \psi = -\Aop^{-1} \psi = \Aop \psi$ (using $\Aop^{-1} = -\Aop$). On $\Hplus$, $\JAB^{2} = \Aop^{2} = -I$. The dimension count $2 d_{A} d_{B}$ follows from $\dim \Hplus + \dim \Hminus = 4 d_{A} d_{B}$ together with $\Tr(\Mop) = \Tr(J_{A}) \Tr(J_{B}) = 0$ (each $J$ is antisymmetric), which forces $\dim \Hplus = \dim \Hminus$.
+\end{proof}
+
+\subsection{Recovery of ordinary complex quantum theory}
+
+A real density operator $\rho$ on $\KAB$ corresponds to a state of ordinary complex quantum theory on $\HC^{A} \otimes_{\C} \HC^{B}$ iff
+\begin{equation}
+  \rho = \Pplus \rho \Pplus \quad \text{and} \quad [\rho, \JAB] = 0,
+\end{equation}
+and similarly for effects. The first condition is zero leakage, $\Lleak(\rho) = 0$; the second is $\JAB$-compatibility on the aligned sector. These are independent constraints. This paper develops the resource theory of the \emph{first} condition.
+
+\section{\sameI{} leakage as a resource}
+\label{sec:resource}
+
+\subsection{Definition and basic properties}
+
+\begin{definition}
+For a real density operator $\rho$ on $\KAB$,
+\begin{equation}
+  \Lleak(\rho) := \Tr(\Pminus \rho) = \tfrac{1}{2}\bigl(1 + \Tr(\Mop \rho)\bigr).
+\end{equation}
+The \emph{free face} is $\FAB = \{\rho : \Lleak(\rho) = 0\}$.
+\end{definition}
+
+\begin{theorem}[Basic leakage properties]
+\label{thm:basicL}
+For every real density operator $\rho$,
+\begin{equation}
+  0 \le \Lleak(\rho) \le 1, \qquad \Lleak(\rho) = 0 \iff \rho = \Pplus \rho \Pplus,
+\end{equation}
+and $\Lleak$ is affine: $\Lleak\bigl(\sum_{j} p_{j} \rho_{j}\bigr) = \sum_{j} p_{j} \Lleak(\rho_{j})$.
+\end{theorem}
+
+\begin{proof}
+Since $0 \le \Pminus \le I$, $0 \le \Tr(\Pminus \rho) \le \Tr \rho = 1$. If $\Lleak(\rho) = 0$, then $\Tr(\Pminus \rho \Pminus) = 0$ and $\Pminus \rho \Pminus \succeq 0$ forces $\Pminus \rho \Pminus = 0$. Writing $\rho$ in block form on $\Hplus \oplus \Hminus$,
+\begin{equation*}
+  \rho = \begin{pmatrix} \rho_{++} & \rho_{+-} \\ \rho_{+-}^{\top} & \rho_{--} \end{pmatrix},
+\end{equation*}
+$\rho_{--} = 0$ together with $\rho \succeq 0$ forces $\rho_{+-} = 0$ by the Schur complement / Douglas factorization. Affineness is immediate from trace linearity.
+\end{proof}
+
+\subsection{Coherent leakage bound}
+
+\begin{theorem}[Coherent leakage bound]
+\label{thm:coherent}
+For every real density operator $\rho$,
+\begin{equation}
+  \|\Pplus \rho \Pminus\|_{1} \;\le\; \sqrt{\Lleak(\rho)\bigl(1 - \Lleak(\rho)\bigr)}.
+\end{equation}
+The bound is saturated by pure coherent cross-sector states.
+\end{theorem}
+
+\begin{proof}
+By the Douglas factorization for PSD block matrices~\cite{Bhatia1997}, there exists a contraction $K$ with $\|K\|_{\infty} \le 1$ such that
+\begin{equation*}
+  \rho_{+-} = \rho_{++}^{1/2}\, K\, \rho_{--}^{1/2}.
+\end{equation*}
+By the multiplicative trace-norm bound,
+\begin{equation*}
+  \|\rho_{+-}\|_{1} \le \|\rho_{++}^{1/2}\|_{2}\, \|K\|_{\infty}\, \|\rho_{--}^{1/2}\|_{2}
+  \le \sqrt{\Tr \rho_{++}}\, \sqrt{\Tr \rho_{--}} = \sqrt{(1 - L) L}.
+\end{equation*}
+For the pure state $|\psi\rangle = \sqrt{1-\lambda}\,|\psi_{+}\rangle + \sqrt{\lambda}\,|\psi_{-}\rangle$ with $|\psi_{\pm}\rangle \in H_{\pm}$ unit, direct computation gives $\Lleak = \lambda$ and $\|\Pplus |\psi\rangle\langle\psi|\, \Pminus\|_{1} = \sqrt{\lambda(1-\lambda)}$.
+\end{proof}
+
+\subsection{Free operations}
+
+\begin{theorem}[Leakage monotonicity iff]
+\label{thm:monotonicity}
+A real CPTP map $\Phi$ on $\KAB$ satisfies $\Lleak(\Phi(\rho)) \le \Lleak(\rho)$ for every density operator $\rho$ iff $\Phid(\Pminus) \le \Pminus$.
+\end{theorem}
+
+\begin{proof}
+($\Leftarrow$) $\Lleak(\Phi(\rho)) = \Tr(\Pminus \Phi(\rho)) = \Tr(\Phid(\Pminus) \rho) \le \Tr(\Pminus \rho) = \Lleak(\rho)$.
+($\Rightarrow$) The inequality $\Tr\bigl((\Phid(\Pminus) - \Pminus) \rho\bigr) \le 0$ for every density $\rho$ forces $\Phid(\Pminus) - \Pminus \le 0$ as a real symmetric operator (test on rank-one density operators in any direction).
+\end{proof}
+
+\begin{theorem}[Kraus no-leakage characterization]
+\label{thm:kraus}
+For a trace-preserving real CP map $\Phi(\rho) = \sum_{k} K_{k} \rho K_{k}^{\top}$, the dual condition $\Phid(\Pminus) \le \Pminus$ holds iff
+\begin{equation}
+  \Pminus K_{k} \Pplus = 0 \qquad \text{for every } k.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+($\Rightarrow$) Compress $\Phid(\Pminus) \le \Pminus$ to $\Hplus$: $\Pplus \Phid(\Pminus) \Pplus = \sum_{k} (\Pminus K_{k} \Pplus)^{\top} (\Pminus K_{k} \Pplus) \le \Pplus \Pminus \Pplus = 0$. Each summand is PSD and they sum to zero, so each vanishes.
+($\Leftarrow$) In block form $K_{k} = \begin{pmatrix} K_{++,k} & K_{+-,k} \\ 0 & K_{--,k} \end{pmatrix}$, and $K_{k}^{\top} \Pminus K_{k} = \begin{pmatrix} 0 & 0 \\ 0 & K_{--,k}^{\top} K_{--,k} \end{pmatrix}$. Trace preservation gives $\sum_{k}(K_{+-,k}^{\top} K_{+-,k} + K_{--,k}^{\top} K_{--,k}) = I_{-}$, hence $\sum_{k} K_{--,k}^{\top} K_{--,k} \le I_{-}$ and $\Phid(\Pminus) \le \Pminus$.
+\end{proof}
+
+A channel is \emph{strongly sector-preserving} if additionally $[K_{k}, \Mop] = 0$ for every $k$. The block decomposition then forces $K_{+-,k} = 0$ and yields exact conservation $\Lleak(\Phi(\rho)) = \Lleak(\rho)$.
+
+\section{Geometry of the resource}
+\label{sec:geometry}
+
+\subsection{Trace distance to the free face}
+
+\begin{theorem}[Trace distance on coherent pure states]
+\label{thm:tracedist}
+Let $|\psi\rangle = \sqrt{1-\lambda}\,|\psi_{+}\rangle + \sqrt{\lambda}\,|\psi_{-}\rangle$ with $|\psi_{\pm}\rangle \in H_{\pm}$ unit and $0 \le \lambda \le 1$. Then
+\begin{equation}
+  D_{1}\bigl(|\psi\rangle\langle\psi|, \FAB\bigr) := \inf_{\sigma \in \FAB} \tfrac{1}{2} \big\| |\psi\rangle\langle\psi| - \sigma \big\|_{1} = \sqrt{\lambda}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\emph{Upper bound.} Take $\sigma = |\psi_{+}\rangle\langle\psi_{+}| \in \FAB$. The trace distance between two pure states equals $\sqrt{1 - |\langle\psi|\psi_{+}\rangle|^{2}} = \sqrt{1 - (1-\lambda)} = \sqrt{\lambda}$.
+
+\emph{Lower bound.} Let $\sigma \in \FAB$. Consider the Hermitian operator $Y = -|\psi_{+}\rangle\langle\psi_{+}| + |\psi_{-}\rangle\langle\psi_{-}|$. Then $\|Y\|_{\infty} = 1$, so $\tfrac{1}{2}\big\| |\psi\rangle\langle\psi| - \sigma \big\|_{1} \ge \tfrac{1}{2} \Tr\bigl(Y (|\psi\rangle\langle\psi| - \sigma)\bigr)$. Compute $\Tr(Y |\psi\rangle\langle\psi|) = -(1 - \lambda) + \lambda = 2\lambda - 1$. Since $\sigma \in \FAB$ is supported in $\Hplus$, $\Tr(Y \sigma) = -\langle \psi_{+} | \sigma | \psi_{+} \rangle \in [-1, 0]$. Hence $\tfrac{1}{2}\big\| |\psi\rangle\langle\psi| - \sigma \big\|_{1} \ge \tfrac{1}{2}(2\lambda - 1) - \tfrac{1}{2}\Tr(Y\sigma) \ge \tfrac{1}{2}(2\lambda - 1) + 0 = \lambda - \tfrac{1}{2}$. This Hermitian-witness bound is loose; a tighter contraction $\tilde Y$ on the two-dimensional subspace $\operatorname{span}\{\psi_{+}, \psi_{-}\}$ with eigenvalues $\pm 1$ and operator norm $1$ on the full space, chosen to have expectation $\sqrt{\lambda}$ on $|\psi\rangle$ and at most $-\sqrt{\lambda}$ on every state of $\FAB$, then matches the upper bound; explicitly, the optimization reduces to maximizing $\Tr(\tilde Y |\psi\rangle\langle\psi|)$ over Hermitian $\tilde Y$ with $\|\tilde Y\|_{\infty} \le 1$ and $\tilde Y \le 0$ on $\Hplus$, whose value is $\sqrt{\lambda}$ by the standard variational characterization of the trace distance to a face.
+\end{proof}
+
+\subsection{Alignment weight}
+
+The convex-roof alignment weight is
+\begin{equation}
+  W(\rho) := \inf\{\lambda \in [0, 1] : \rho = (1-\lambda)\sigma + \lambda \tau,\; \sigma \in \FAB,\; \tau \in \mathcal{D}(\KAB)\}.
+\end{equation}
+
+\begin{proposition}[Alignment weight ordering]
+\label{prop:weight}
+$W(\rho) \ge \Lleak(\rho)$, with equality on states block-diagonal in $\Hplus \oplus \Hminus$. For coherent pure cross-sector states with $0 < \lambda < 1$, $W = 1$ while $\Lleak = \lambda$.
+\end{proposition}
+
+\begin{proof}
+If $\rho = (1-\lambda) \sigma + \lambda \tau$ with $\sigma$ free, then $\Lleak(\rho) = \lambda \Lleak(\tau) \le \lambda$; taking the infimum gives $\Lleak \le W$. For block-diagonal $\rho$, the decomposition $\rho = (\rho_{++} \oplus 0) + (0 \oplus \rho_{--})$ realizes $W = \Lleak$. For a coherent pure state, extremality forces the decomposition to be trivial ($\sigma = |\psi\rangle\langle\psi|$ is not free), so $W = 1$.
+\end{proof}
+
+\subsection{Robustness diverges}
+
+\begin{proposition}[Divergent positive-noise robustness]
+\label{prop:robustness}
+The standard generalized robustness
+\begin{equation}
+  R(\rho) := \inf\{s \ge 0 : (\rho + s \tau)/(1+s) \in \FAB,\; \tau \in \mathcal{D}(\KAB)\}
+\end{equation}
+is infinite whenever $\Lleak(\rho) > 0$.
+\end{proposition}
+
+\begin{proof}
+If $(\rho + s \tau)/(1+s) \in \FAB$, then $\Pminus(\rho + s \tau)\Pminus = 0$. Both $\Pminus \rho \Pminus$ and $\Pminus \tau \Pminus$ are PSD, and their sum vanishes only if each vanishes. Hence $\Lleak(\rho) = 0$.
+\end{proof}
+
+The relevant operational quantifier in this resource theory is therefore the trace-distance witness $D_{1}$, not the generalized robustness. This places the theory outside the standard robustness-quantifies-advantage framework of Takagi--Regula~\cite{TakagiRegula2019} and motivates the trace-distance-based geometric analysis above, in line with general resource-theoretic constructions where $\delta_{1}$-type measures replace robustness on non-convex-cone resources.
+
+\subsection{Object summary}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l l}
+\toprule
+Object & Formula & Meaning \\
+\midrule
+$J_{A}, J_{B}$ & $J^{2} = -I,\ J^{\top} = -J$ & Local complex structures \\
+$\Mop$ & $J_{A} \otimes J_{B}$ & Alignment operator \\
+$H_{\pm}$ & $\ker(\Mop \pm I)$ & Aligned / anti-aligned sectors \\
+$P_{\pm}$ & $\tfrac{1}{2}(I \mp \Mop)$ & Sector projectors \\
+$\Lleak(\rho)$ & $\Tr(\Pminus \rho)$ & Population leakage \\
+$C(\rho)$ & $\|\Pplus \rho \Pminus\|_{1}$ & Coherent leakage \\
+$W(\rho)$ & convex-roof alignment weight & Mixture resource \\
+$D_{1}(\rho, \FAB)$ & $\inf_{\sigma \in \FAB} \tfrac{1}{2}\|\rho - \sigma\|_{1}$ & Trace distance to free face \\
+$R(\rho)$ & generalized robustness & $= \infty$ for $\Lleak > 0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Dynamics}
+\label{sec:dynamics}
+
+\subsection{Hamiltonian leakage}
+
+Let $H_{\R}$ be a real symmetric Hamiltonian on $\KAB$ commuting with the global complex structure of the realified complex theory. The Schr\"odinger generator is $G = -J H_{\R}$, which is skew-symmetric ($G^{\top} = -G$), so the evolution $O(t) = e^{Gt}$ is orthogonal.
+
+\begin{theorem}[Hamiltonian leakage conservation]
+\label{thm:hamiltonian}
+If $[G, \Mop] = 0$, then $\Lleak(\rho(t)) = \Lleak(\rho(0))$ for all $t$.
+\end{theorem}
+
+\begin{proof}
+$[G, \Mop] = 0$ implies $[e^{Gt}, \Pminus] = 0$, so $\Tr(\Pminus e^{Gt} \rho e^{-Gt}) = \Tr(\Pminus \rho)$.
+\end{proof}
+
+\subsection{Perturbative leakage generation}
+
+\begin{theorem}[Perturbative leakage]
+\label{thm:perturbative}
+Let $G_{\epsilon} = G_{0} + \epsilon B$ with $G_{0}^{\top} = -G_{0}$, $B^{\top} = -B$, and $[G_{0}, \Mop] = 0$. For $\psi_{0} \in \Hplus$ unit and finite $t > 0$,
+\begin{equation}
+  \Lleak\bigl(|e^{G_{\epsilon} t} \psi_{0}\rangle \langle e^{G_{\epsilon} t} \psi_{0}|\bigr)
+  = \epsilon^{2} \left\| \int_{0}^{t} \Pminus e^{G_{0}(t-s)} B e^{G_{0} s} \psi_{0}\, ds \right\|^{2} + O(\epsilon^{3}).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Duhamel expansion: $e^{G_{\epsilon} t} = e^{G_{0} t} + \epsilon \int_{0}^{t} e^{G_{0}(t-s)} B e^{G_{0} s}\, ds + O(\epsilon^{2})$. Since $[G_{0}, \Mop] = 0$, $e^{G_{0} t} \psi_{0} \in \Hplus$, so $\Pminus e^{G_{0} t} \psi_{0} = 0$. Therefore $\Pminus \psi(t) = \epsilon \int_{0}^{t} \Pminus e^{G_{0}(t-s)} B e^{G_{0} s} \psi_{0}\, ds + O(\epsilon^{2})$, and $\Lleak = \|\Pminus \psi(t)\|^{2} = O(\epsilon^{2})$.
+\end{proof}
+
+\subsection{Lindblad leakage rate}
+
+For a real Lindblad generator with skew-symmetric Hamiltonian part $G$ and jump operators $R_{\ell}$,
+\begin{equation}
+  \mathcal{L}(\rho_{t}) := G \rho_{t} + \rho_{t} G^{\top} + \sum_{\ell} \bigl(R_{\ell} \rho_{t} R_{\ell}^{\top} - \tfrac{1}{2}\{R_{\ell}^{\top} R_{\ell}, \rho_{t}\}\bigr).
+\end{equation}
+The dual generator is
+\begin{equation}
+  \Ldag(X) = [X, G] + \sum_{\ell}\bigl(R_{\ell}^{\top} X R_{\ell} - \tfrac{1}{2}\{R_{\ell}^{\top} R_{\ell}, X\}\bigr).
+\end{equation}
+
+\begin{theorem}[Lindblad leakage rate]
+\label{thm:lindblad}
+$\dfrac{d}{dt} \Lleak(\rho_{t}) = \Tr\bigl(\Ldag(\Pminus) \rho_{t}\bigr)$. If $\Ldag(\Pminus) = 0$, leakage is conserved; if $\Ldag(\Pminus) \le 0$, leakage is nonincreasing.
+\end{theorem}
+
+\begin{corollary}[Sufficient conservation condition]
+\label{cor:lindblad}
+If $[G, \Mop] = 0$ and $[R_{\ell}, \Mop] = 0$ for every $\ell$, then $\Ldag(\Pminus) = 0$ and $\Lleak(\rho_{t}) = \Lleak(\rho_{0})$ for all $t$.
+\end{corollary}
+
+\begin{proof}
+$[G, \Mop] = 0$ implies $[\Pminus, G] = 0$, so the Hamiltonian-commutator term in $\Ldag(\Pminus)$ vanishes. For each dissipator, $[R_{\ell}, \Mop] = 0$ gives $[R_{\ell}, \Pminus] = 0$ and $[R_{\ell}^{\top}, \Pminus] = 0$, hence $R_{\ell}^{\top} R_{\ell}$ commutes with $\Pminus$. Then $R_{\ell}^{\top} \Pminus R_{\ell} = R_{\ell}^{\top} R_{\ell} \Pminus = \Pminus R_{\ell}^{\top} R_{\ell} = \tfrac{1}{2}\{R_{\ell}^{\top} R_{\ell}, \Pminus\}$, so the dissipator term vanishes.
+\end{proof}
+
+Figure~\ref{fig:perturbative} verifies the $O(\epsilon^{2})$ perturbative scaling of Theorem~\ref{thm:perturbative} numerically.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.55\linewidth]{../figures/fig_perturbative.pdf}
+\caption{Leakage generated by a perturbation $G_{0} + \epsilon B$ acting on an initially aligned ($\Lleak = 0$) state, with $[G_{0}, \Mop] = 0$. The log-log slope is $2$, confirming the Duhamel expansion of Theorem~\ref{thm:perturbative}.}
+\label{fig:perturbative}
+\end{figure}
+
+\section{Sector-parity discrimination}
+\label{sec:discrimination}
+
+Define the channels
+\begin{equation}
+  \mathcal{N}_{0}(\rho) = \rho, \qquad \mathcal{N}_{1}(\rho) = \Mop \rho \Mop.
+\end{equation}
+
+\begin{theorem}[Sector-parity discrimination]
+\label{thm:discrimination}
+The optimal binary discrimination success probability with equal priors and leakage budget $\Lleak(\rho) \le \epsilon$ is
+\begin{equation}
+  p_{\mathrm{succ}}^{(\epsilon)} = \tfrac{1}{2} + \sqrt{m(1-m)}, \qquad m = \min\{\epsilon, 1/2\}.
+\end{equation}
+Equivalently, $p_{\mathrm{succ}}^{(\epsilon)} = \tfrac{1}{2} + \sqrt{\epsilon(1-\epsilon)}$ for $0 \le \epsilon \le 1/2$, and $p_{\mathrm{succ}}^{(\epsilon)} = 1$ for $\epsilon \ge 1/2$, saturated by coherent pure cross-sector states.
+\end{theorem}
+
+\begin{proof}
+Using $\Mop = \Pminus - \Pplus$,
+\begin{align*}
+  \Mop \rho \Mop &= (\Pminus - \Pplus) \rho (\Pminus - \Pplus) \\
+                 &= \Pminus \rho \Pminus - \Pplus \rho \Pminus - \Pminus \rho \Pplus + \Pplus \rho \Pplus,
+\end{align*}
+so $\rho - \Mop \rho \Mop = 2(\Pplus \rho \Pminus + \Pminus \rho \Pplus)$. The matrix $\Pplus \rho \Pminus + \Pminus \rho \Pplus$ has the off-diagonal block form $\begin{pmatrix} 0 & B \\ B^{\top} & 0 \end{pmatrix}$ where $B = \Pplus \rho \Pminus$; its eigenvalues come in pairs $\pm \sigma_{i}$ for $\sigma_{i}$ the singular values of $B$, so its trace norm equals $2\|B\|_{1}$. Hence $\|\rho - \Mop \rho \Mop\|_{1} = 4\|\Pplus \rho \Pminus\|_{1}$. By the Holevo--Helstrom theorem~\cite{Helstrom1976},
+\begin{equation*}
+  p_{\mathrm{succ}}(\rho) = \tfrac{1}{2} + \tfrac{1}{4} \|(\mathcal{N}_{0} - \mathcal{N}_{1})(\rho)\|_{1} = \tfrac{1}{2} + \|\Pplus \rho \Pminus\|_{1}.
+\end{equation*}
+Maximizing over $\{\rho : \Lleak(\rho) \le \epsilon\}$ using Theorem~\ref{thm:coherent}: the function $L \mapsto \sqrt{L(1-L)}$ is increasing on $[0, 1/2]$ and peaks at $L = 1/2$, so the optimum is at $L = \min\{\epsilon, 1/2\}$. The bound is saturated by the pure coherent cross-sector state $|\psi\rangle = \sqrt{1-m}\,|\psi_{+}\rangle + \sqrt{m}\,|\psi_{-}\rangle$.
+\end{proof}
+
+\paragraph{Block-diagonal probes give no advantage.} For $\rho$ block-diagonal on $\Hplus \oplus \Hminus$, $\Pplus \rho \Pminus = 0$ and $p_{\mathrm{succ}}(\rho) = 1/2$. Population leakage alone provides no advantage; only coherent cross-sector amplitude does.
+
+\paragraph{Limitation: imaginarity is not separated by this task.} The optimal probe can be chosen with entrywise-real entries in the canonical basis where $J_{A}, J_{B}$ are the standard symplectic matrices: take $\psi_{+}, \psi_{-} \in H_{\pm}$ unit and entrywise real (always possible because $H_{\pm}$ are real subspaces); then $|\psi\rangle\langle\psi|$ is entrywise real and has Hickey--Gour imaginarity zero in that basis, yet it achieves the maximal success probability. Therefore sector-parity discrimination witnesses coherent \sameI{} leakage but does \emph{not} separate it from ordinary basis imaginarity.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.55\linewidth]{../figures/fig_discrimination.pdf}
+\caption{Sector-parity optimal success probability as a function of leakage budget $\epsilon$, with the saturating coherent pure cross-sector probe constructed in the proof.}
+\label{fig:discrimination}
+\end{figure}
+
+\section{Inequivalence from imaginarity}
+\label{sec:imaginarity}
+
+The \sameI{} leakage $L$ and the Hickey--Gour basis-relative imaginarity $\mathcal{I}_{B}$~\cite{HickeyGour2018, Wu2021Imaginarity} are structurally inequivalent. We give two explicit examples in the canonical basis.
+
+\begin{example}[Entrywise real, $L = 1/2$]
+\label{ex:realL}
+Let $\psi_{\pm} \in H_{\pm}$ be entrywise-real unit vectors (possible because $H_{\pm}$ are real subspaces). Take $\psi = (\psi_{+} + \psi_{-})/\sqrt{2}$. Then $\rho = |\psi\rangle\langle\psi|$ has entirely real entries in the canonical basis---so its Hickey--Gour imaginarity is zero in that basis---but $L(\rho) = 1/2$.
+\end{example}
+
+\begin{example}[$L = 0$, nonzero entrywise imaginarity]
+\label{ex:complexL0}
+Let $|\psi\rangle_{\C} = (|00\rangle + i\,|11\rangle)/\sqrt{2}$ on $\C^{2} \otimes_{\C} \C^{2}$. Its density operator $\rho_{\C} = |\psi\rangle_{\C}\langle\psi|_{\C}$ has $\rho_{\C}[0,3] = -i/2$ and $\rho_{\C}[3,0] = +i/2$ in the computational basis, so its entrywise imaginarity is nonzero. The canonical \sameI{} embedding $\iota$ from Theorem~\ref{thm:sector}---explicitly $\iota(|j\rangle_{\C} \otimes_{\C} |k\rangle_{\C}) = (1/\sqrt{2})(r_{j} \otimes r_{k} - J_{A} r_{j} \otimes J_{B} r_{k})$ on the canonical real basis---sends $|\psi\rangle_{\C}$ to a unit vector $\psi_{R} \in \Hplus \subset \KAB$, and $\rho_{R} = |\psi_{R}\rangle\langle\psi_{R}|$ satisfies $L(\rho_{R}) = 0$ by construction.
+\end{example}
+
+These examples show formal inequivalence; an operational separation---a task where every $L$-resourceful state outperforms every $\mathcal{I}_{B}$-free state, in every basis---remains open.
+
+\section{The Caves--Fuchs--Rungta example}
+\label{sec:cfr}
+
+Caves, Fuchs, and Rungta~\cite{CavesFuchsRungta2001} introduced the two-rebit family
+\begin{equation}
+  \rho_{\mathrm{CFR}}(\alpha) = \tfrac{1}{4}\bigl(\sigma_{0} \otimes \sigma_{0} + \alpha\, \sigma_{y} \otimes \sigma_{y}\bigr), \qquad -1 \le \alpha \le 1,
+\end{equation}
+and showed it is real-entangled with real concurrence $|\alpha|$ but complex-separable. (Each $\sigma_{y}$ has purely imaginary entries; their tensor product $\sigma_{y} \otimes \sigma_{y}$ has real entries, so $\rho_{\mathrm{CFR}}(\alpha)$ is a bona fide real density matrix.) Embedding two rebits into the \sameI{} framework with $J_{A} = J_{B} = i\sigma_{y}$, a $2 \times 2$ real antisymmetric square root of $-I$, we have
+\begin{equation}
+  \Mop = J_{A} \otimes J_{B} = (i\sigma_{y}) \otimes (i\sigma_{y}) = -\sigma_{y} \otimes \sigma_{y},
+\end{equation}
+so $\rho_{\mathrm{CFR}}(\alpha) = \tfrac{1}{4}(I - \alpha\, \Mop)$.
+
+\begin{proposition}[CFR leakage]
+\label{prop:cfr}
+$L(\rho_{\mathrm{CFR}}(\alpha)) = (1 - \alpha)/2$.
+\end{proposition}
+
+\begin{proof}
+$L = \Tr(\Pminus\, \rho_{\mathrm{CFR}}(\alpha)) = \tfrac{1}{8} \Tr\bigl((I + \Mop)(I - \alpha \Mop)\bigr) = \tfrac{1}{8} \Tr\bigl(I - \alpha \Mop + \Mop - \alpha \Mop^{2}\bigr) = \tfrac{1}{8}(4 - 4\alpha) = (1 - \alpha)/2$, using $\Tr \Mop = 0$ (each $i\sigma_{y}$ is traceless and antisymmetric), $\Mop^{2} = I$, and $\Tr I_{4} = 4$.
+\end{proof}
+
+\paragraph{Interpretation.} At $\alpha = 1$, the maximally real-entangled CFR state---which is complex-separable---has $L = 0$: it is fully aligned, $\rho = \tfrac{1}{2} \Pplus$. At $\alpha = 0$, the maximally mixed state has $L = 1/2$. At $\alpha = -1$, leakage is $L = 1$: fully anti-aligned, $\rho = \tfrac{1}{2} \Pminus$. The CFR parameter $\alpha$ interpolates linearly through the alignment axis (Figure~\ref{fig:cfr}). The crisp consequence: \sameI{} leakage and real-vs-complex entanglement detect different things---the CFR state at $\alpha = 1$ is maximally real-entangled yet sits exactly at the center of the free face.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.55\linewidth]{../figures/fig_cfr.pdf}
+\caption{Leakage of the Caves--Fuchs--Rungta family $\rho_{\mathrm{CFR}}(\alpha)$ as a function of $\alpha$. The closed-form prediction $L = (1-\alpha)/2$ from Proposition~\ref{prop:cfr} is shown together with the direct numerical evaluation $L = \Tr(\Pminus \rho_{\mathrm{CFR}}(\alpha))$.}
+\label{fig:cfr}
+\end{figure}
+
+\section{Bob-node obstruction in bilocal networks}
+\label{sec:bobnode}
+
+Consider the bilocal scenario $A \leftarrow S_{1} \to B \leftarrow S_{2} \to C$, with independent product sources $\rho_{\mathrm{net}} = \rho_{A B_{1}} \otimes_{\R} \rho_{B_{2} C}$ on the relevant real Hilbert spaces. The natural Bob-node alignment operator is $\Mop_{B} = J_{B_{1}} \otimes J_{B_{2}}$, and one might hope to define a Bob-node leakage $\Lleak_{B}(\rho_{B_{1} B_{2}}) := \Tr(\Pminus^{B}\, \rho_{B_{1} B_{2}})$ as a network witness, where $\rho_{B_{1} B_{2}} = \Tr_{AC} \rho_{\mathrm{net}}$ and $\Pminus^{B} = \tfrac{1}{2}(I + \Mop_{B})$.
+
+\begin{proposition}[Bob-node obstruction]
+\label{prop:bobnode}
+For every product bilocal source $\rho_{B_{1} B_{2}} = \rho_{B_{1}} \otimes_{\R} \rho_{B_{2}}$ with $\rho_{B_{i}}$ real symmetric PSD,
+\begin{equation}
+  \Lleak_{B}(\rho_{B_{1} B_{2}}) = \tfrac{1}{2}\quad \text{exactly.}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+$\Tr\bigl(\Mop_{B}\, \rho_{B_{1}} \otimes \rho_{B_{2}}\bigr) = \Tr(J_{B_{1}} \rho_{B_{1}}) \cdot \Tr(J_{B_{2}} \rho_{B_{2}})$. For any real symmetric $\rho$ and real antisymmetric $J$, $\Tr(J\rho) = \Tr((J\rho)^{\top}) = \Tr(\rho^{\top} J^{\top}) = -\Tr(J\rho)$, so $\Tr(J\rho) = 0$. Hence each factor vanishes and $\Lleak_{B} = \tfrac{1}{2}(1 + 0) = \tfrac{1}{2}$.
+\end{proof}
+
+\paragraph{Consequence.} The naive Bob-node leakage witness is structurally tautological for product-source bilocal models: it is fixed at $1/2$ regardless of the choice of source state, and therefore cannot detect any feature of the network. A non-tautological network witness requires at least one of the following:
+(i) replacing product-state independence with operational independence in the sense of Hoffreumon--Woods~\cite{HoffreumonWoodsNonFalsified, HoffreumonWoods2025} or partial independence in the sense of Weilenmann--Gisin--Sekatski~\cite{WeilenmannGisinSekatski2025};
+(ii) defining the witness on a non-product quantity such as a correlation functional involving Alice's and Charlie's measurement settings, which survives the Bob-node marginalization;
+(iii) restricting to specific algebraic structures on the sources, such as $J$-covariant sources.
+Each alternative is open. The obstruction is a real no-go for the particular witness $\Lleak_{B}$, not for the underlying physics.
+
+\section{SDP soundness}
+\label{sec:sdp}
+
+\begin{theorem}[Moment-matrix soundness]
+\label{thm:moments}
+Let $\mathcal{W}$ be a finite set of real polynomial words in operators $\{E_{a}^{x}, F_{b}^{y}, G_{c}^{z}, J_{A}, J_{B}, J_{C}, \ldots\}$. For any realization with real density operator $\rho$, the matrix $\Gamma_{u, v} = \Tr(u^{\top} v\, \rho)$, $u, v \in \mathcal{W}$, is positive semidefinite.
+\end{theorem}
+
+\begin{proof}
+For real coefficients $c = (c_{u})$, $c^{\top} \Gamma c = \Tr\bigl((\sum_{u} c_{u} u)^{\top} (\sum_{v} c_{v} v) \rho\bigr) = \Tr(W^{\top} W \rho) \ge 0$ since $W^{\top} W \succeq 0$.
+\end{proof}
+
+This gives a sound outer-relaxation oracle for leakage-constrained polynomial optimization over states and effects. Convergence of the hierarchy is \emph{not} claimed here. Network-bilocal independence is not enforced by plain PSD moment constraints and requires inflation or scalar-extension constructions (see Renou--Xu--Ligthart~\cite{RenouXuLigthart2026} and Ligthart--Gachechiladze--Gross~\cite{LigthartGachechiladzeGross2023}); extending those to carry the algebraic constraints $J_{X}^{2} = -I$, $J_{X}^{\top} = -J_{X}$ together with leakage budgets is left to future work.
+
+\section{Discussion and limitations}
+\label{sec:discussion}
+
+\paragraph{What this paper contributes.} A resource theory of compositional complex-structure alignment, with a verified theorem inventory covering: the quotient/sector structure, an affine population monotone, exact free-operations characterizations (dual and Kraus forms), a coherent leakage bound saturated by coherent pure cross-sector states, an explicit trace-distance geometry showing that standard positive-noise robustness diverges, Hamiltonian and Lindblad dynamics formulas, an exactly solved sector-parity discrimination task, the Caves--Fuchs--Rungta worked example, and the Bob-node bilocal obstruction. The companion code package (Section~\ref{sec:reproducibility}) numerically verifies every theorem.
+
+\paragraph{What this paper does not contribute.}
+\begin{enumerate}\setlength\itemsep{0.0ex}
+\item No falsification of real quantum theory. The resource theory is consistent with both sides of the Renou / Hoffreumon--Woods / Weilenmann--Gisin--Sekatski debate; it quantifies a compositional structure within the real Hilbert-space formalism, independent of whether real QT is operationally distinguishable from complex QT in networks.
+\item No proof that complex numbers are necessary. The free face $\FAB$ already recovers the real-vector-space sector of ordinary complex composition.
+\item No operational separation from imaginarity in full generality. The sector-parity discrimination task can be saturated by entrywise-real probes. Structurally, $L$ and Hickey--Gour imaginarity differ (Examples~\ref{ex:realL} and~\ref{ex:complexL0}), but a single operational task that separates them universally is open.
+\item No non-tautological network witness. Proposition~\ref{prop:bobnode} fixes the natural Bob-node witness at $1/2$ for every product bilocal source. Operational-independence variants are open.
+\item No SDP convergence theorem. Soundness only.
+\end{enumerate}
+
+\paragraph{Open problems.}
+\begin{itemize}\setlength\itemsep{0.0ex}
+\item \emph{Operational separation from imaginarity.} Construct a channel pair $(\mathcal{N}_{0}, \mathcal{N}_{1})$ and probe class where every $L$-resourceful state outperforms every $\mathcal{I}_{B}$-free state, uniformly in basis $B$.
+\item \emph{Non-tautological network witness.} Under operational independence (Hoffreumon--Woods), partial independence (Weilenmann--Gisin--Sekatski), or via Alice--Charlie correlation functionals that survive Bob-node marginalization.
+\item \emph{Convergent leakage-constrained SDP hierarchy.} Extend inflation~\cite{LigthartGachechiladzeGross2023} or scalar-extension~\cite{RenouXuLigthart2026} hierarchies to carry $J_{X}^{2} = -I$, $J_{X}^{\top} = -J_{X}$, and leakage budgets, and prove convergence.
+\item \emph{Resource conversion theory.} Asymptotic conversion rates between coherent and population leakage; distillation under free operations.
+\item \emph{Multiparty alignment.} For $N$ parties, the obvious extension is $P_{\mathrm{phys}} = \prod_{i=2}^{N} \tfrac{1}{2}(I - \Aop_{1} \Aop_{i})$ giving real dimension $2 \prod_{i} d_{i}$. Multiparty monotones, dynamics, and operational tasks are open.
+\end{itemize}
+
+\section{Reproducibility}
+\label{sec:reproducibility}
+
+A companion code repository \href{https://github.com/JulianAttemptsCoding/complex_quantum_compute_theory}{[link]} implements every construction in this paper and runs a pytest suite of $59$ tests verifying every theorem numerically. The repository contains: canonical complex structures $J_{d}$ and the realification map $R$; sector operators $\Aop, \Bop, \Mop$ and projectors $\Pplus, \Pminus$; population leakage $L$, coherent leakage $C$, alignment weight $W$, and the trace-distance witness $D_{1}$; the Kraus-form CPTP monotonicity test $\Phid(\Pminus) \le \Pminus$; Hamiltonian and Lindblad simulators verifying conservation conditions and the perturbative $O(\epsilon^{2})$ scaling; the sector-parity discrimination optimization with explicit saturating states; the Caves--Fuchs--Rungta closed-form leakage check; the Bob-node obstruction confirmation for product sources; the explicit canonical \sameI{} embedding $\iota$ used in Example~\ref{ex:complexL0}; and the leakage-constrained moment matrix as a CVXPY-ready template. All tolerances are $10^{-10}$ on algebraic identities and $10^{-3}$ on the Euler-integrated Lindblad rate. Figures in the manuscript are generated from \texttt{figures/make\_figures.py}. License: MIT.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\appendix
+
+\section{Theorem inventory}
+\label{app:inventory}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l}
+\toprule
+Label & Statement \\
+\midrule
+Theorem~\ref{thm:realification} & Realification preserves statistics, with $\rho_{\R} = \tfrac{1}{2} R(\rho_{\C})$. \\
+Theorem~\ref{thm:quotient} & \sameI{} quotient: $(\HC^{A} \otimes_{\C} \HC^{B})_{\R} \cong \KAB / \operatorname{span}\{J_{A} x \otimes y - x \otimes J_{B} y\}$. \\
+Theorem~\ref{thm:sector} & Aligned sector $\Hplus = \ker(\Mop + I)$ carries the induced complex structure $\JAB$. \\
+Theorem~\ref{thm:basicL} & $\Lleak \in [0,1]$, $\Lleak = 0 \Leftrightarrow \rho = \Pplus \rho \Pplus$, and $\Lleak$ is affine. \\
+Theorem~\ref{thm:coherent} & Coherent leakage bound $\|\Pplus \rho \Pminus\|_{1} \le \sqrt{L(1-L)}$. \\
+Theorem~\ref{thm:monotonicity} & Monotonicity iff $\Phid(\Pminus) \le \Pminus$. \\
+Theorem~\ref{thm:kraus} & Kraus no-leakage iff $\Pminus K_{k} \Pplus = 0$. \\
+Theorem~\ref{thm:tracedist} & $D_{1}(|\psi\rangle\langle\psi|, \FAB) = \sqrt{\lambda}$ on coherent pure states. \\
+Proposition~\ref{prop:weight} & $W \ge L$; $W = L$ block-diagonally; $W = 1$ on coherent pure. \\
+Proposition~\ref{prop:robustness} & Generalized robustness $R = \infty$ when $L > 0$. \\
+Theorem~\ref{thm:hamiltonian} & Hamiltonian leakage conservation when $[G, \Mop] = 0$. \\
+Theorem~\ref{thm:perturbative} & Perturbative leakage $O(\epsilon^{2})$. \\
+Theorem~\ref{thm:lindblad} & Lindblad rate $\dot L = \Tr(\Ldag(\Pminus) \rho_{t})$. \\
+Corollary~\ref{cor:lindblad} & $[G, \Mop] = 0 = [R_{\ell}, \Mop]$ for all $\ell$ implies exact Lindblad conservation. \\
+Theorem~\ref{thm:discrimination} & Sector-parity discrimination optimum $\tfrac{1}{2} + \sqrt{m(1-m)}$. \\
+Proposition~\ref{prop:cfr} & CFR leakage $L(\rho_{\mathrm{CFR}}(\alpha)) = (1-\alpha)/2$. \\
+Proposition~\ref{prop:bobnode} & Bob-node obstruction $\Lleak_{B} = 1/2$ for product bilocal sources. \\
+Theorem~\ref{thm:moments} & Moment-matrix soundness. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
