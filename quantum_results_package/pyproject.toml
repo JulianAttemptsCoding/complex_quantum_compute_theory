@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "samei"
+version = "1.0.0"
+description = "Same-i sector resource theory: numerical sanity checks and figures."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "Julian Juan", email = "juliansjuan08@gmail.com"},
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "matplotlib>=3.6",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+sdp = ["cvxpy>=1.4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,149 @@
+{
+  "path": "C:\\Users\\Julia\\OneDrive\\Desktop\\quantum i\\paper\\main.tex",
+  "found": true,
+  "hits": [
+    {
+      "phrase": "complete resource theory",
+      "count": 1,
+      "lines": [
+        {
+          "line": 78,
+          "text": "\\Tr(\\Pminus\\rho)$ --- and we develop it into a complete resource theory."
+        }
+      ]
+    },
+    {
+      "phrase": "basis-independent",
+      "count": 4,
+      "lines": [
+        {
+          "line": 77,
+          "text": "basis-independent monotone --- the \\textbf{same-$i$ leakage} $\\Lleak(\\rho) ="
+        },
+        {
+          "line": 189,
+          "text": "  same-$i$ leakage is basis-independent --- it depends only on the choice of local"
+        },
+        {
+          "line": 800,
+          "text": "basis-independent. The two are therefore distinct resources, but the precise nature"
+        },
+        {
+          "line": 925,
+          "text": "Imaginarity is basis-relative; same-$i$ leakage is basis-independent. Examples~%"
+        }
+      ]
+    },
+    {
+      "phrase": "ordinary complex composition is exactly",
+      "count": 3,
+      "lines": [
+        {
+          "line": 75,
+          "text": "show that ordinary complex composition is exactly the zero-leakage, aligned-sector"
+        },
+        {
+          "line": 147,
+          "text": "  ordinary complex composition is exactly the aligned sector $\\Hplus$ together"
+        },
+        {
+          "line": 915,
+          "text": "Ordinary complex composition is exactly the zero-leakage, aligned sector of a"
+        }
+      ]
+    },
+    {
+      "phrase": "center of the aligned sector",
+      "count": 2,
+      "lines": [
+        {
+          "line": 89,
+          "text": "the center of the aligned sector, demonstrating that same-$i$ leakage and"
+        },
+        {
+          "line": 445,
+          "text": "$\\rho=\\tfrac{1}{2}\\Pplus$, sitting at the center of the aligned sector. This is the"
+        }
+      ]
+    },
+    {
+      "phrase": "requires operational",
+      "count": 1,
+      "lines": [
+        {
+          "line": 96,
+          "text": "alignment requires operational, rather than product-state, source independence ---"
+        }
+      ]
+    },
+    {
+      "phrase": "no quantity built linearly",
+      "count": 1,
+      "lines": [
+        {
+          "line": 896,
+          "text": "\\textbf{Negative:} no quantity built linearly from the marginal $\\rho_{B_1B_2}$"
+        }
+      ]
+    },
+    {
+      "phrase": "J-covariant sources",
+      "count": 0,
+      "lines": []
+    },
+    {
+      "phrase": "minimum-effort",
+      "count": 1,
+      "lines": [
+        {
+          "line": 737,
+          "text": "internal operational probe of the resource theory: a ``minimum-effort'' task whose"
+        }
+      ]
+    },
+    {
+      "phrase": "constructed by hand",
+      "count": 0,
+      "lines": []
+    },
+    {
+      "phrase": "unitarity constraint",
+      "count": 1,
+      "lines": [
+        {
+          "line": 409,
+          "text": "second condition is a unitarity constraint at fixed sector; once a state sits inside"
+        }
+      ]
+    },
+    {
+      "phrase": "convex-roof alignment weight",
+      "count": 2,
+      "lines": [
+        {
+          "line": 576,
+          "text": "The convex-roof alignment weight is"
+        },
+        {
+          "line": 636,
+          "text": "$W(\\rho)$ & convex-roof alignment weight & Mixture resource \\\\"
+        }
+      ]
+    },
+    {
+      "phrase": "verifies every theorem",
+      "count": 0,
+      "lines": []
+    },
+    {
+      "phrase": "SDP convergence",
+      "count": 0,
+      "lines": []
+    },
+    {
+      "phrase": "SDP completeness",
+      "count": 0,
+      "lines": []
+    }
+  ]
+}

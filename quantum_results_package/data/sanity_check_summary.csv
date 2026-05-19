@@ -1,0 +1,16 @@
+macro,value,gate,result
+RealificationMaxBornError,1.110223e-16,<= 1e-12,PASS
+SectorProjectorMaxError,0.000000e+00,<= 1e-12,PASS
+EmbeddingMaxError,0.000000e+00,<= 1e-12,PASS
+CFRMaxLeakageError,0.000000e+00,<= 1e-12,PASS
+CFRMaxCoherentLeakage,0.000000e+00,<= 1e-12,PASS
+CoherentLeakageMaxViolation,3.330669e-16,<= 1e-10,PASS
+CoherentLeakageMaxPureError,2.775558e-16,<= 1e-12,PASS
+CoherentBlockDiagMaxC,0.000000e+00,<= 1e-12,PASS
+FreeOpsMaxMonotoneIncrease,0.000000e+00,<= 1e-10,PASS
+KrausCriterionMaxCompressionError,1.529461e-15,<= 1e-12,PASS
+DiscriminationMaxError,2.220446e-16,<= 1e-12,PASS
+PerturbativeSlope,1.999994e+00,"in [1.95, 2.05]",PASS
+PerturbativeMaxSmallEpsRelError,2.420836e-05,<= 0.1,PASS
+BobObstructionMaxDeviation,2.220446e-16,<= 1e-12,PASS
+MomentMatrixMinEigenvalue,-3.496831e-15,>= -1e-10,PASS

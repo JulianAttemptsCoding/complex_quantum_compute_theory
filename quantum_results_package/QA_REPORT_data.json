@@ -1,0 +1,119 @@
+{
+  "metrics": {
+    "real_max_born_err": 1.1102230246251565e-16,
+    "sector_proj_err": 0.0,
+    "embed_err": 0.0,
+    "free_max_increase": 0.0,
+    "free_max_compression": 1.5294605443686434e-15,
+    "trace_distance_err": 1.2212453270876722e-15,
+    "trace_distance_mode": "analytic",
+    "bob_obstruction_n": 1000,
+    "bob_obstruction_max_dev": 2.220446049250313e-16,
+    "moment_min_eig": -3.496831494332582e-15,
+    "cfr_n": 201,
+    "cfr_max_err_L": 0.0,
+    "cfr_max_C": 0.0,
+    "coherent_random_count": 1000,
+    "coherent_max_violation": 3.3306690738754696e-16,
+    "coherent_pure_err": 2.7755575615628914e-16,
+    "coherent_bd_max_C": 0.0,
+    "disc_grid": 401,
+    "disc_max_err": 2.220446049250313e-16,
+    "perturbative_time": 1.0,
+    "perturbative_slope": 1.999994324760322,
+    "perturbative_a_norm_sq": 4.199851418877292,
+    "perturbative_max_rel_err_small": 2.4208363558084492e-05
+  },
+  "gates": [
+    {
+      "macro": "RealificationMaxBornError",
+      "value": "1.110223e-16",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "SectorProjectorMaxError",
+      "value": "0.000000e+00",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "EmbeddingMaxError",
+      "value": "0.000000e+00",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "CFRMaxLeakageError",
+      "value": "0.000000e+00",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "CFRMaxCoherentLeakage",
+      "value": "0.000000e+00",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "CoherentLeakageMaxViolation",
+      "value": "3.330669e-16",
+      "gate": "<= 1e-10",
+      "result": "PASS"
+    },
+    {
+      "macro": "CoherentLeakageMaxPureError",
+      "value": "2.775558e-16",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "CoherentBlockDiagMaxC",
+      "value": "0.000000e+00",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "FreeOpsMaxMonotoneIncrease",
+      "value": "0.000000e+00",
+      "gate": "<= 1e-10",
+      "result": "PASS"
+    },
+    {
+      "macro": "KrausCriterionMaxCompressionError",
+      "value": "1.529461e-15",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "DiscriminationMaxError",
+      "value": "2.220446e-16",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "PerturbativeSlope",
+      "value": "1.999994e+00",
+      "gate": "in [1.95, 2.05]",
+      "result": "PASS"
+    },
+    {
+      "macro": "PerturbativeMaxSmallEpsRelError",
+      "value": "2.420836e-05",
+      "gate": "<= 0.1",
+      "result": "PASS"
+    },
+    {
+      "macro": "BobObstructionMaxDeviation",
+      "value": "2.220446e-16",
+      "gate": "<= 1e-12",
+      "result": "PASS"
+    },
+    {
+      "macro": "MomentMatrixMinEigenvalue",
+      "value": "-3.496831e-15",
+      "gate": ">= -1e-10",
+      "result": "PASS"
+    }
+  ]
+}
